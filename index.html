@@ -263,6 +263,37 @@ requests. The default value is 250.</li>
 and <code>--provider-key=&lt;provider public key&gt;</code> can be specified in
 order to change the default settings.</p>
 
+<h2><a name="fedora-systemd-service" class="anchor" href="#fedora-systemd-service"><span
+class="mini-icon mini-icon-link"></span></a>Installation as a systemd service
+on Fedora</h2>
+
+<p>This section includes a sample systemd configuration file which can be on
+with Fedora 20 or other Linux distributions which use systemd.</p>
+
+<pre><code>[Unit]
+Description=dnscrypt-proxy
+After=syslog.target network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=forking
+PIDFile=/run/dnscrypt.pid
+ExecStart=/usr/sbin/dnscrypt-proxy --pid-file=/run/dnscrypt.pid --daemonize
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s QUIT $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+<p>To use this config, simply copy the contents in the
+<strong>/lib/systemd/system/dnscrypt-proxy.service</strong> file.<p>
+
+<p>After you have done this, you can start the service and enable it
+to make sure it automatically starts on boot.</p>
+
+<pre><code># service dnscrypt-proxy enable
+# service dnscrypt-proxy start</code></pre>
+
 <h2><a name="windows-service" class="anchor" href="#windows-service"><span
 class="mini-icon mini-icon-link"></span></a>Installation as a service
 (Windows only)</h2>
@@ -416,6 +447,6 @@ href="https://github.com/jedisct1/dnscrypt-proxy/blob/master/THANKS">thanks!</a>
 
     </div>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    
+
   </body>
 </html>
